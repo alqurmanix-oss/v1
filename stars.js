@@ -1,64 +1,33 @@
-/**
- * 🌌 ALQARMANI X - RADIANT STARS ULTIMATE (ONE-CORE)
- * الإصدار الشامل: (خدمة + حماية + تنبيهات) في ملف واحد
- * المستلم: 01027834695 | alqurmanix@gmail.com
- */
-
 (function() {
-    // 1. إعدادات الإدارة (بياناتك)
-    const _0xAlq = {
-        wa: "201027834695",
-        mail: "alqurmanix@gmail.com",
-        reportTime: "21:00",
-        targetDomain: window.location.hostname
-    };
-
-    // 2. محرك النجوم (الخدمة)
-    function launchStars() {
+    "use strict";
+    const init = () => {
+        const config = window._ALQ_CONFIG || { color: '#fbbf24', count: 35 };
+        if (window._ALQ_STARS_DONE) return;
+        window._ALQ_STARS_DONE = true;
         const style = document.createElement('style');
-        style.innerHTML = `
-            .alq-s { position:absolute; width:8px; height:8px; background:radial-gradient(circle, #fbbf24 0%, transparent 80%); border-radius:50%; pointer-events:none; z-index:999999; animation:alq-f 0.8s ease-out forwards; }
-            @keyframes alq-f { 0%{transform:scale(1);opacity:1;} 100%{transform:scale(0) translate(var(--x),var(--y)); opacity:0;} }
-        `;
+        style.innerHTML = `.alq-p { position: fixed; width: 8px; height: 8px; background: radial-gradient(circle, ${config.color} 0%, transparent 80%); border-radius: 50%; pointer-events: none; z-index: 2147483647; animation: alq-f 800ms ease-out forwards; } @keyframes alq-f { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(0) translate(var(--x), var(--y)); opacity: 0; } }`;
         document.head.appendChild(style);
-
-        document.addEventListener('mousedown', (e) => {
-            const frag = document.createDocumentFragment();
-            for (let i = 0; i < 35; i++) {
-                const s = document.createElement('div');
-                s.className = 'alq-s';
-                s.style.left = e.pageX + 'px'; s.style.top = e.pageY + 'px';
-                const x = (Math.random() - 0.5) * 450;
-                const y = (Math.random() - 0.5) * 450;
-                s.style.setProperty('--x', x + 'px'); s.style.setProperty('--y', y + 'px');
-                frag.appendChild(s);
-                setTimeout(() => s.remove(), 800);
+        const effect = (e) => {
+            const x = e.clientX || (e.touches && e.touches[0].clientX);
+            const y = e.clientY || (e.touches && e.touches[0].clientY);
+            if (!x || !y) return;
+            const f = document.createDocumentFragment();
+            for (let i = 0; i < config.count; i++) {
+                const p = document.createElement('div');
+                p.className = 'alq-p';
+                p.style.left = x + 'px'; p.style.top = y + 'px';
+                const tx = (Math.random() - 0.5) * 400;
+                const ty = (Math.random() - 0.5) * 400;
+                p.style.setProperty('--x', tx + 'px');
+                p.style.setProperty('--y', ty + 'px');
+                f.appendChild(p);
+                setTimeout(() => p.remove(), 800);
             }
-            document.body.appendChild(frag);
-        });
-    }
-
-    // 3. نظام التنبيهات والتقرير (اللسان)
-    async function notifyOwner(type, msg) {
-        const payload = {
-            to_wa: _0xAlq.wa,
-            to_mail: _0xAlq.mail,
-            msg: `🚀 القرماني إكس - ${type}: ${msg}\nالموقع: ${_0xAlq.targetDomain}`
+            document.body.appendChild(f);
         };
-        // استدعاء الجسر (سيتم الربط مع API الإرسال)
-        console.log("Sending Notification:", payload);
-    }
-
-    // 4. التقرير اليومي المبرمج (9:00 مساءً)
-    setInterval(() => {
-        const now = new Date();
-        if (now.getHours() === 21 && now.getMinutes() === 0) {
-            notifyOwner("التقرير اليومي", "المنظومة تعمل بكفاءة 100% - الكود مستقر");
-        }
-    }, 60000);
-
-    // التشغيل الفوري
-    launchStars();
-    notifyOwner("تفعيل", "تم ربط كود النجوم بالموقع الآن");
-
+        document.addEventListener('mousedown', effect);
+        document.addEventListener('touchstart', effect, { passive: true });
+    };
+    if (document.readyState === 'complete') init();
+    else window.addEventListener('load', init);
 })();
